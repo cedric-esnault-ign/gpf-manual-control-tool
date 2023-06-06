@@ -1,7 +1,7 @@
 const center = [48.84497573035927, 2.4247001358237523];
 
 function convertToGpfURL(gppURL) {
-  return gppURL
+  return "https://wmts.geopf.fr/rok4/wmts?"
 }
 
 const mapGpp = L.map('mapGpp', {
@@ -21,7 +21,8 @@ mapGpp.sync(mapGpf);
 mapGpf.sync(mapGpp);
 
 Gp.Services.getConfig({
-  apiKey: "calcul,ortho",
+  serverUrl: 'autoconf.json',
+  callbackSuffix : '',
   onSuccess: go
 });
 
@@ -31,15 +32,31 @@ function go () {
   const lyr = L.geoportalLayer.WMTS({
     layer  : "ORTHOIMAGERY.ORTHOPHOTOS"
   });
-  gpfUrl = convertToGpfURL(lyr._url);
   const lyr2 = L.geoportalLayer.WMTS({
     layer  : "ORTHOIMAGERY.ORTHOPHOTOS"
   });
+  gpfUrl = convertToGpfURL(lyr._url);
   lyr2._url = gpfUrl;
   lyr.addTo(mapGpp);
   lyr2.addTo(mapGpf);
 
   document.getElementById("submit").addEventListener("click", () => {
+    const lyr = L.geoportalLayer.WMTS({
+      layer: document.getElementById("gppId").value,
+    });
+    const lyr2 = L.geoportalLayer.WMTS({
+      layer: document.getElementById("gppId").value,
+    });
+    gpfUrl = convertToGpfURL(lyr._url);
+    lyr2._url = gpfUrl;
+    mapGpp.eachLayer(function (layer) {
+      mapGpp.removeLayer(layer);
+    });
+    mapGpf.eachLayer(function (layer) {
+      mapGpf.removeLayer(layer);
+    });
+    lyr.addTo(mapGpp);
+    lyr2.addTo(mapGpf);
   });
 }
 

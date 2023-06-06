@@ -18,6 +18,10 @@ h1 {
   height: 100%;
 }
 
+#gppId {
+  width: 400px;
+}
+
 #mapGpp {
   float: left;
 }
