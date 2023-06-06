@@ -1,0 +1,36 @@
+html, body {
+  width: 100vw;
+  height: 100vh;
+  margin: 0;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+}
+
+h1 {
+  text-align: center;
+}
+
+.map {
+  width: 49.5%;
+  height: 100%;
+}
+
+#mapGpp {
+  float: left;
+}
+
+#mapGpf {
+  float: right;
+}
+
+#mapsContainer {
+  height: 100%;
+}
+
+#form {
+  margin-bottom: 25px;
+  text-align: center;
+}
