@@ -21,9 +21,9 @@ mapGpp.sync(mapGpf);
 mapGpf.sync(mapGpp);
 
 Gp.Services.getConfig({
-  serverUrl: 'autoconf.json',
-  callbackSuffix : '',
-  onSuccess: go
+  customConfigFile: 'fullConfig.json',
+  onSuccess: go,
+  onFailure: (e) => {console.log(e)}
 });
 
 function go () {
