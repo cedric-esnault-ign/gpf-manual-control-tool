@@ -1,8 +1,8 @@
 const center = [48.84497573035927, 2.4247001358237523];
 
 function convertToGpfURL(gppURL) {
-  // return "https://wmts.geopf.fr/rok4/wmts?"
-  return gppURL
+  return "https://data.geopf.fr/wmts?"
+  // return gppURL
 }
 
 const mapGpp = L.map('mapGpp', {
