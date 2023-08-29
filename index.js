@@ -1,7 +1,12 @@
 const center = [48.84497573035927, 2.4247001358237523];
 
-function convertToGpfURL(gppURL) {
+function convertToGpfWmtsURL(gppURL) {
   return "https://data.geopf.fr/wmts?"
+  // return gppURL
+}
+
+function convertToGpfWmsURL(gppURL) {
+  return "https://data.geopf.fr/wms-v/ows?"
   // return gppURL
 }
 
@@ -30,34 +35,53 @@ Gp.Services.getConfig({
 function go () {
   const search = L.geoportalControl.SearchEngine({});
   mapGpp.addControl(search);
-  const lyr = L.geoportalLayer.WMTS({
+  const lyrGpp = L.geoportalLayer.WMTS({
     layer  : "ORTHOIMAGERY.ORTHOPHOTOS"
   });
-  const lyr2 = L.geoportalLayer.WMTS({
+  const lyrGpf = L.geoportalLayer.WMTS({
     layer  : "ORTHOIMAGERY.ORTHOPHOTOS"
   });
-  gpfUrl = convertToGpfURL(lyr._url);
-  lyr2._url = gpfUrl;
-  lyr.addTo(mapGpp);
-  lyr2.addTo(mapGpf);
+  gpfUrl = convertToGpfWmtsURL(lyrGpp._url);
+  lyrGpf._url = gpfUrl;
+  lyrGpp.addTo(mapGpp);
+  lyrGpf.addTo(mapGpf);
 
   document.getElementById("submit").addEventListener("click", () => {
-    const lyr = L.geoportalLayer.WMTS({
-      layer: document.getElementById("gppId").value,
-    });
-    const lyr2 = L.geoportalLayer.WMTS({
-      layer: document.getElementById("gppId").value,
-    });
-    gpfUrl = convertToGpfURL(lyr._url);
-    lyr2._url = gpfUrl;
+    const service = document.querySelector('input[name="radioService"]:checked').value;
+    let lyrGpp;
+    let lyrGpf;
+    let gpfUrl;
+    if (service === "wmts") {
+      lyrGpp = L.geoportalLayer.WMTS({
+        layer: document.getElementById("gppId").value,
+      });
+      lyrGpf = L.geoportalLayer.WMTS({
+        layer: document.getElementById("gppId").value,
+      });
+      gpfUrl = convertToGpfWmtsURL(lyrGpp._url);
+    } else if (service === "wms") {
+      lyrGpp = L.geoportalLayer.WMS({
+        layer: document.getElementById("gppId").value,
+      });
+      lyrGpp.options.styles = "";
+      lyrGpp.wmsParams.styles = "";
+      console.log(lyrGpp);
+      lyrGpf = L.geoportalLayer.WMS({
+        layer: document.getElementById("gppId").value,
+      });
+      lyrGpf.options.styles = "";
+      lyrGpf.wmsParams.styles = "";
+      gpfUrl = convertToGpfWmsURL(lyrGpp._url);
+    }
+    lyrGpf._url = gpfUrl;
     mapGpp.eachLayer(function (layer) {
       mapGpp.removeLayer(layer);
     });
     mapGpf.eachLayer(function (layer) {
       mapGpf.removeLayer(layer);
     });
-    lyr.addTo(mapGpp);
-    lyr2.addTo(mapGpf);
+    lyrGpp.addTo(mapGpp);
+    lyrGpf.addTo(mapGpf);
   });
 }
 
