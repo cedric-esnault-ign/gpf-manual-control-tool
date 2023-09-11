@@ -33,6 +33,10 @@ Gp.Services.getConfig({
 });
 
 function go () {
+  mapGpp.on("zoomend", () => {
+    document.getElementById("currentZoom").innerText = mapGpp.getZoom();
+  });
+
   const search = L.geoportalControl.SearchEngine({});
   mapGpp.addControl(search);
   const lyrGpp = L.geoportalLayer.WMTS({
