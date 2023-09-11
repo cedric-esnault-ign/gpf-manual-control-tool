@@ -12,7 +12,7 @@ function convertToGpfWmsURL(gppURL) {
 
 const mapGpp = L.map('mapGpp', {
     center: center,
-    zoom: 18
+    zoom: 12
 });
 
 mapGpp.attributionControl.setPrefix('');
