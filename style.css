@@ -50,16 +50,22 @@ p {
 #autocomplete {
   position: absolute;
   z-index: 10000;
-  background-color: white;
   left: 50%;
   transform: translateX(-50%);
+  font-size: 0.8em;
 }
 
 #autocomplete p {
   border: solid 1px black;
+  border-bottom: 0px;
+  border-top-color: #aaa;
+  background-color: white;
+}
+
+#autocomplete p:first-child {
+  border-top-color:black;
 }
 
 #autocomplete p:hover {
-  border: solid 1px black;
   background-color: turquoise;
 }
