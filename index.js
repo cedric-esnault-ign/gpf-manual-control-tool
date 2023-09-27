@@ -34,23 +34,27 @@ Gp.Services.getConfig({
 
 function go () {
   const $textField = document.getElementById("gppId");
+  const $autocomplete = document.getElementById("autocomplete");
+  let pleaseRemoveAuto = true;
+
   const allLayers = Object.keys(Gp.Config.layers).map((x) => x.split('$'));
   const allWMTSLayers = allLayers.filter((x) => x[1] == "GEOPORTAIL:OGC:WMTS").map((x) => x[0]);
-
   const allWMSVLayers = allLayers.filter((x) => x[1] == "GEOPORTAIL:OGC:WMS").map((x) => x[0]);
 
   let currentLayers = allWMTSLayers;
 
   function renderNames(arrayOfNames) {
-    document.getElementById("autocomplete").innerHTML = "";
+    $autocomplete.innerHTML = "";
     for (let i = 0; i < arrayOfNames.length; i++) {
       let newli = document.createElement("p");
       newli.innerText = arrayOfNames[i];
-      newli.addEventListener("click", () => {
+      newli.addEventListener("mouseup", () => {
         $textField.value = arrayOfNames[i];
         document.getElementById("submit").click();
+        $autocomplete.classList.add("d-none");
+        pleaseRemoveAuto = true;
       })
-      document.getElementById("autocomplete").appendChild(newli);
+      $autocomplete.appendChild(newli);
     }
   }
 
@@ -91,10 +95,17 @@ function go () {
 
   $textField.addEventListener("keyup", filterNames);
   $textField.addEventListener("focus", () => {
-    document.getElementById("autocomplete").classList.remove("d-none");
+    $autocomplete.classList.remove("d-none");
   });
   $textField.addEventListener("focusout", () => {
-    setTimeout(() => {document.getElementById("autocomplete").classList.add("d-none");}, 150)
+    setTimeout(() => {
+      if (pleaseRemoveAuto) {
+        $autocomplete.classList.add("d-none");
+      }
+    }, 150);
+  });
+  $autocomplete.addEventListener("mousedown", () => {
+    pleaseRemoveAuto = false;
   });
 
   mapGpp.on("zoomend", () => {
