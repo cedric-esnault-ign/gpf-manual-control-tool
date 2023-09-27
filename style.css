@@ -22,6 +22,10 @@ p {
   height: 100%;
 }
 
+.d-none {
+  display: none;
+}
+
 #gppId {
   width: 400px;
 }
@@ -41,4 +45,21 @@ p {
 #form {
   margin-bottom: 25px;
   text-align: center;
+}
+
+#autocomplete {
+  position: absolute;
+  z-index: 10000;
+  background-color: white;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+#autocomplete p {
+  border: solid 1px black;
+}
+
+#autocomplete p:hover {
+  border: solid 1px black;
+  background-color: turquoise;
 }

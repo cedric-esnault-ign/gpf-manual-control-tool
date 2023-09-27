@@ -20,11 +20,12 @@
 <body>
   <h1>Outil de contrôle de la migration des données sur la Géoplateforme</h1>
   <div id="form">
-    <label for="gppId">Identifiant de la couche Géoportail : </label><input id="gppId" placeholder="ORTHOIMAGERY.ORTHOPHOTOS" type="text">
+    <p><label for="gppId">Identifiant de la couche Géoportail : </label><input id="gppId" placeholder="ORTHOIMAGERY.ORTHOPHOTOS" type="text"><div class="d-none" id="autocomplete"></div></p>
     <input type="radio" id="radioWMTS" name="radioService" value="wmts" checked />
     <label for="radioWMTS">WMTS</label>
     <input type="radio" id="radioWMS" name="radioService" value="wms" />
     <label for="dewradioWMSey">WMS Vecteur</label>
+    <br />
     <button id="submit">Valider</button>
     <p>Niveau de zoom actuel : <span id="currentZoom">12</span></p>
   </div>

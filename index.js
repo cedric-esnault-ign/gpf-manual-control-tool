@@ -33,6 +33,70 @@ Gp.Services.getConfig({
 });
 
 function go () {
+  const $textField = document.getElementById("gppId");
+  const allLayers = Object.keys(Gp.Config.layers).map((x) => x.split('$'));
+  const allWMTSLayers = allLayers.filter((x) => x[1] == "GEOPORTAIL:OGC:WMTS").map((x) => x[0]);
+
+  const allWMSVLayers = allLayers.filter((x) => x[1] == "GEOPORTAIL:OGC:WMS").map((x) => x[0]);
+
+  let currentLayers = allWMTSLayers;
+
+  function renderNames(arrayOfNames) {
+    document.getElementById("autocomplete").innerHTML = "";
+    for (let i = 0; i < arrayOfNames.length; i++) {
+      let newli = document.createElement("p");
+      newli.innerText = arrayOfNames[i];
+      newli.addEventListener("click", () => {
+        $textField.value = arrayOfNames[i];
+        document.getElementById("submit").click();
+      })
+      document.getElementById("autocomplete").appendChild(newli);
+    }
+  }
+
+  renderNames(currentLayers);
+
+  filterNames = (event) => {
+    if (event.key === 'Enter' || event.keyCode === 13) {
+      $textField.blur();
+      document.getElementById("submit").click();
+      return
+    }
+    var searchvalue = event.target.value;
+    var filterNames = currentLayers.filter((v) => {
+      return v.includes(searchvalue);
+    });
+    renderNames(filterNames);
+  }
+
+  document.getElementById("radioWMTS").addEventListener("change", () => {
+    const service = document.querySelector('input[name="radioService"]:checked').value;
+    if (service == "wmts") {
+      currentLayers = allWMTSLayers;
+    } else {
+      currentLayers = allWMSVLayers
+    }
+    renderNames(currentLayers);
+  })
+
+  document.getElementById("radioWMS").addEventListener("change", () => {
+    const service = document.querySelector('input[name="radioService"]:checked').value;
+    if (service == "wmts") {
+      currentLayers = allWMTSLayers;
+    } else {
+      currentLayers = allWMSVLayers
+    }
+    renderNames(currentLayers);
+  })
+
+  $textField.addEventListener("keyup", filterNames);
+  $textField.addEventListener("focus", () => {
+    document.getElementById("autocomplete").classList.remove("d-none");
+  });
+  $textField.addEventListener("focusout", () => {
+    setTimeout(() => {document.getElementById("autocomplete").classList.add("d-none");}, 150)
+  });
+
   mapGpp.on("zoomend", () => {
     document.getElementById("currentZoom").innerText = mapGpp.getZoom();
   });
@@ -57,21 +121,20 @@ function go () {
     let gpfUrl;
     if (service === "wmts") {
       lyrGpp = L.geoportalLayer.WMTS({
-        layer: document.getElementById("gppId").value,
+        layer: $textField.value,
       });
       lyrGpf = L.geoportalLayer.WMTS({
-        layer: document.getElementById("gppId").value,
+        layer: $textField.value,
       });
       gpfUrl = convertToGpfWmtsURL(lyrGpp._url);
     } else if (service === "wms") {
       lyrGpp = L.geoportalLayer.WMS({
-        layer: document.getElementById("gppId").value,
+        layer: $textField.value,
       });
       lyrGpp.options.styles = "";
       lyrGpp.wmsParams.styles = "";
-      console.log(lyrGpp);
       lyrGpf = L.geoportalLayer.WMS({
-        layer: document.getElementById("gppId").value,
+        layer: $textField.value,
       });
       lyrGpf.options.styles = "";
       lyrGpf.wmsParams.styles = "";
